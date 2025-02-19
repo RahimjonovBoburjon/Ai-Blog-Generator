@@ -1,19 +1,26 @@
-export const generateBlogFromAI = async (topic) => {
-    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+import axios from "axios";
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: `Write a blog about ${topic}` }],
-            max_tokens: 500,
-        }),
-    });
+const API_URL = "https://api.openai.com/v1/chat/completions";
+const API_KEY = import.meta.env.VITE_OPENAI_API_KEY; // API kalitni .env fayldan olish
 
-    const data = await response.json();
-    return data.choices?.[0]?.message?.content || "Error generating blog.";
-};
+export async function generateBlogFromAI(prompt) {
+    try {
+        const response = await axios.post(
+            API_URL,
+            {
+                model: "gpt-3.5-turbo", // yoki "gpt-3.5-turbo"
+                messages: [{ role: "user", content: prompt }],
+                temperature: 0.7,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${API_KEY}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("API xatosi:", error.response?.data || error.message);
+    }
+}
