@@ -1,0 +1,28 @@
+name: Deploy App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repozitoriyani klonlash
+        uses: actions/checkout@v3
+
+      - name: Node.js’ni o‘rnatish
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: .env faylni yaratish
+        run: echo "VITE_OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
+
+      - name: NPM bog‘liqliklarni o‘rnatish
+        run: npm install
+
+      - name: Loyihani build qilish
+        run: npm run build
