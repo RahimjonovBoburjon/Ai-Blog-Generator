@@ -1,7 +1,7 @@
 <template>
     <div
         class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6">
-        <h1 class="text-4xl font-bold mb-6 animate-fade-in">AI Blog Generator</h1>
+        <h1 class="text-4xl text-center font-bold mb-6 animate-fade-in">AI Blog Generator</h1>
         <input v-model="topic" type="text" placeholder="Enter a topic..." @keyup.enter="generateBlog" class="w-full max-w-md p-3 border border-gray-700 rounded-lg bg-gray-800 text-white placeholder-gray-500
         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
         <button @click="generateBlog"
