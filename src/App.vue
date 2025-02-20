@@ -2,8 +2,8 @@
     <div
         class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6">
         <h1 class="text-4xl font-bold mb-6 animate-fade-in">AI Blog Generator</h1>
-        <input v-model="topic" type="text" placeholder="Enter a topic..."
-            class="w-full max-w-md p-3 border border-gray-700 rounded-lg bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
+        <input v-model="topic" type="text" placeholder="Enter a topic..." @keyup.enter="generateBlog" class="w-full max-w-md p-3 border border-gray-700 rounded-lg bg-gray-800 text-white placeholder-gray-500
+        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300" />
         <button @click="generateBlog"
             class="mt-6 px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 rounded-lg text-lg font-semibold disabled:opacity-50 transition-all duration-300"
             :disabled="loading">
@@ -11,9 +11,9 @@
         </button>
 
         <div v-if="generatedBlog"
-            class="mt-8 p-6 bg-gray-800 rounded-lg w-full max-w-2xl backdrop-blur-md bg-opacity-80 animate-fade-in">
+            class="mt-8 mb-12 p-6 bg-gray-800 rounded-lg w-full max-w-2xl backdrop-blur-md bg-opacity-80 animate-fade-in">
             <h2 class="text-2xl font-semibold mb-4">Generated Blog:</h2>
-            <p class="mt-2 text-gray-300 leading-relaxed">{{ generatedBlog }}</p>
+            <div v-html="generatedBlog" class="mt-2 text-gray-300 leading-relaxed"></div>
         </div>
     </div>
 
@@ -31,15 +31,16 @@
 <script setup>
 import { ref } from "vue";
 import { generateBlogFromAI } from "./api";
-
+import { marked } from 'marked';
 const topic = ref("");
 const generatedBlog = ref("");
 const loading = ref(false);
 
 const generateBlog = async () => {
-    if (!topic.value) return;
+    if (!topic.value.trim()) return;
     loading.value = true;
-    generatedBlog.value = await generateBlogFromAI(topic.value);
+    const response = await generateBlogFromAI(topic.value);
+    generatedBlog.value = marked(response);
     loading.value = false;
 };
 </script>
